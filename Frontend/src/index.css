@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-surface text-zinc-100 antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-surface;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-border rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-500;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400
+           text-white font-semibold text-sm transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2 focus:ring-offset-surface
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-surface-border
+           hover:bg-surface-hover text-zinc-200 font-semibold text-sm transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-surface
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-surface-hover
+           text-zinc-400 hover:text-zinc-100 font-medium text-sm transition-all duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl bg-surface-card border border-surface-border
+           text-zinc-100 placeholder:text-zinc-500
+           focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
+           transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-surface-card border border-surface-border rounded-2xl;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .badge-artist {
+    @apply badge bg-brand-900 text-brand-300 border border-brand-700;
+  }
+
+  .badge-user {
+    @apply badge bg-zinc-800 text-zinc-300 border border-zinc-700;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-zinc-400 hover:text-zinc-100
+           hover:bg-surface-hover font-medium text-sm transition-all duration-150;
+  }
+
+  .nav-link-active {
+    @apply nav-link bg-brand-900 text-brand-300 hover:bg-brand-800 hover:text-brand-200;
+  }
+}
+
+/* Audio player range input */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  background: #3f3f46;
+  height: 4px;
+  border-radius: 2px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #22c55e;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  margin-top: -5px;
+}
+
+input[type='range']:focus::-webkit-slider-thumb {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
