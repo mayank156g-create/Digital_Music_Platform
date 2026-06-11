@@ -34,12 +34,16 @@ async function authUser(req, res, next) {
     const token = req.cookies.token;
 
     if (!token) {
-        res.status(401).json({ message: "Unauthorized" })
+        return res.status(401).json({
+            message: "Unauthorized"
+        });
     }
 
     try {
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const decoded = jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        );
 
         if (
             decoded.role !== "user" &&
@@ -52,14 +56,15 @@ async function authUser(req, res, next) {
 
         req.user = decoded;
 
-        next()
-
+        next();
 
     } catch (err) {
         console.log(err);
-        return res.status(401).json({ message: "Unauthorized" })
-    }
 
+        return res.status(401).json({
+            message: "Unauthorized"
+        });
+    }
 }
 
 

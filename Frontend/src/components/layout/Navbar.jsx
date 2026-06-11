@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
+
+<button onClick={() => navigate(-1)}>
+  ← Back
+</button>
 
 export default function Navbar() {
   const { isLoggedIn, isArtist, logout } = useAuth()
