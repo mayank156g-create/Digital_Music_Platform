@@ -1,6 +1,7 @@
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { debugLog } = require("../utils/debugLog");
 
 
 async function registerUser(req, res) {
@@ -36,12 +37,21 @@ async function registerUser(req, res) {
     res.cookie("token", token, {
     httpOnly: true,
     secure: true,
-    sameSite: "none"
+    sameSite: "none",
+    path: "/",
 })
 
+    // #region agent log
+    debugLog('auth.controller.js:registerUser', 'cookie set on register', {
+        origin: req.headers.origin || null,
+        userAgent: req.headers['user-agent']?.slice(0, 120) || null,
+        cookieOpts: { httpOnly: true, secure: true, sameSite: 'none', path: '/' },
+    }, 'H1');
+    // #endregion
 
     res.status(201).json({
         message: "User registered successfully",
+        token,
         user: {
             id: user._id,
             username: user.username,
@@ -85,12 +95,21 @@ async function loginUser(req, res) {
     res.cookie("token", token, {
     httpOnly: true,
     secure: true,
-    sameSite: "none"
+    sameSite: "none",
+    path: "/",
 })
 
+    // #region agent log
+    debugLog('auth.controller.js:loginUser', 'cookie set on login', {
+        origin: req.headers.origin || null,
+        userAgent: req.headers['user-agent']?.slice(0, 120) || null,
+        cookieOpts: { httpOnly: true, secure: true, sameSite: 'none', path: '/' },
+    }, 'H1');
+    // #endregion
 
     res.status(200).json({
         message: "User logged in successfully",
+        token,
         user: {
             id: user._id,
             username: user.username,
@@ -108,7 +127,8 @@ async function logoutUser(req, res) {
     res.clearCookie("token", {
         httpOnly: true,
         secure: true,
-        sameSite: "none"
+        sameSite: "none",
+        path: "/",
     });
 
     res.status(200).json({

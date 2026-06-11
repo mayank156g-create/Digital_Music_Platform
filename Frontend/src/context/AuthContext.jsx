@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { authAPI } from '../services/api'
+import { authAPI, TOKEN_KEY } from '../services/api'
 
 const AuthContext = createContext(null)
 
@@ -16,14 +16,34 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // Pre-fix sessions stored user in localStorage but had no token (mobile cookie blocked)
+  useEffect(() => {
+    try {
+      if (user && !localStorage.getItem(TOKEN_KEY)) {
+        setUser(null)
+      }
+    } catch {
+      setUser(null)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const persistToken = useCallback((token) => {
+    if (token) {
+      localStorage.setItem(TOKEN_KEY, token)
+    } else {
+      localStorage.removeItem(TOKEN_KEY)
+    }
+  }, [])
+
   // Persist user across page refreshes
   useEffect(() => {
     if (user) {
       localStorage.setItem('sw_user', JSON.stringify(user))
     } else {
       localStorage.removeItem('sw_user')
+      persistToken(null)
     }
-  }, [user])
+  }, [user, persistToken])
 
   const clearError = useCallback(() => setError(null), [])
 
@@ -32,6 +52,7 @@ export function AuthProvider({ children }) {
     setError(null)
     try {
       const data = await authAPI.register(formData)
+      persistToken(data.token)
       setUser(data.user)
       return data
     } catch (err) {
@@ -40,13 +61,14 @@ export function AuthProvider({ children }) {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [persistToken])
 
   const login = useCallback(async (formData) => {
     setLoading(true)
     setError(null)
     try {
       const data = await authAPI.login(formData)
+      persistToken(data.token)
       setUser(data.user)
       return data
     } catch (err) {
@@ -55,7 +77,7 @@ export function AuthProvider({ children }) {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [persistToken])
 
   const logout = useCallback(async () => {
     setLoading(true)
@@ -64,10 +86,11 @@ export function AuthProvider({ children }) {
     } catch {
       // Even if the request fails, clear local state
     } finally {
+      persistToken(null)
       setUser(null)
       setLoading(false)
     }
-  }, [])
+  }, [persistToken])
 
   const isArtist = user?.role === 'artist'
   const isUser   = user?.role === 'user'
