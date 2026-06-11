@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Base axios instance — all requests go through here
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://digital-music-platform.onrender.com/api',
   withCredentials: true, // sends the HttpOnly cookie (token) automatically
   headers: { 'Content-Type': 'application/json' },
 })
