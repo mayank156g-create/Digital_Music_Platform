@@ -20,30 +20,13 @@ const api = axios.create({
 // #region agent log
 api.interceptors.request.use((config) => {
   const token = getStoredToken()
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
-  fetch('http://127.0.0.1:7408/ingest/f2ef2744-3593-408f-935a-da8a5ba1cf50', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '4180ab' },
-    body: JSON.stringify({
-      sessionId: '4180ab',
-      location: 'api.js:request',
-      message: 'outgoing API request',
-      data: {
-        url: config.url,
-        method: config.method,
-        withCredentials: config.withCredentials,
-        hasAuthHeader: Boolean(config.headers?.Authorization),
-        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 120) : null,
-      },
-      hypothesisId: 'H1',
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {})
+
   return config
 })
-// #endregion
 
 // ─── Response interceptor ─────────────────────────────────────────────────────
 // Unwrap .data so callers get { message, user / music / album } directly
